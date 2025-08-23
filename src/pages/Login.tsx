@@ -1,22 +1,109 @@
-import logoImage from '../assets/1.webp'
 import '../styles/global.css'
 import '../styles/login.css'
 import { useThemeStore } from '../stores/useThemeStore'
+import { Logo } from '../components/UI/Logo.tsx'
+import { config, buildApiUrl } from '../config/env'
 
 export function Login() {
     const { isDarkTheme, toggleTheme } = useThemeStore()
 
-    function handleGoogleLogin() {
+async function handleGoogleLogin() {
+    try {
         console.log("🔐 Iniciando flujo OAuth con Google...");
-        window.location.href = "/api/auth/google";
+        console.log("🌍 URL de Google Auth:", buildApiUrl(config.auth.googleUrl));
+
+        // Obtener la URL de autenticación del backend
+        const response = await fetch(buildApiUrl(config.auth.googleUrl));
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error obteniendo URL de Google:", errorData);
+            alert(errorData.message || "Error obteniendo URL de autenticación");
+            return;
+        }
+        
+        const data = await response.json();
+        console.log("📋 Datos recibidos:", data);
+        
+        // Asumiendo que el backend devuelve { authUrl: "https://..." }
+        const authUrl = data.authUrl || data.url || data;
+        
+        if (!authUrl) {
+            console.error("No se recibió URL de autenticación");
+            alert("Error: No se pudo obtener la URL de autenticación");
+            return;
+        }
+
+        // Abrir ventana de autenticación
+        const authWindow = window.open(
+            authUrl,
+            'google-auth',
+            'width=500,height=600,scrollbars=yes,resizable=yes'
+        );
+
+        if (!authWindow) {
+            alert("Error: No se pudo abrir la ventana de autenticación. Verifica que los pop-ups estén permitidos.");
+            return;
+        }
+
+        // Escuchar el mensaje de la ventana de autenticación
+        const handleAuthMessage = (event: MessageEvent) => {
+            // Verificar el origen por seguridad
+            if (event.origin !== window.location.origin) {
+                return;
+            }
+
+            if (event.data.type === 'GOOGLE_AUTH_SUCCESS') {
+                console.log("✅ Autenticación exitosa:", event.data);
+                
+                // Aquí manejas los datos del usuario autenticado
+                const userData = event.data.user;
+                console.log("👤 Datos del usuario:", userData);
+                
+                // Guardar tokens o datos de usuario según necesites
+                localStorage.setItem('authToken', event.data.token);
+                localStorage.setItem('user', JSON.stringify(userData));
+                
+                // Redirigir o actualizar estado de la aplicación
+                window.location.href = '/dashboard'; // O usar tu router
+                
+                authWindow.close();
+                window.removeEventListener('message', handleAuthMessage);
+                
+            } else if (event.data.type === 'GOOGLE_AUTH_ERROR') {
+                console.error("❌ Error en autenticación:", event.data.error);
+                alert("Error en la autenticación: " + event.data.error);
+                authWindow.close();
+                window.removeEventListener('message', handleAuthMessage);
+            }
+        };
+
+        // Agregar listener para mensajes
+        window.addEventListener('message', handleAuthMessage);
+
+        // Verificar si la ventana se cierra sin completar la autenticación
+        const checkClosed = setInterval(() => {
+            if (authWindow.closed) {
+                clearInterval(checkClosed);
+                window.removeEventListener('message', handleAuthMessage);
+                console.log("🚪 Ventana de autenticación cerrada");
+            }
+        }, 1000);
+
+    } catch (err) {
+        if (err instanceof Error) {
+            console.error("❌ Error en Google Login:", err.message);
+            alert("Error de conexión: " + err.message);
+        }
     }
+}
 
 
     return (
-        <main class="login-container">
-            <button class="theme-toggle" aria-label="Cambiar tema" onClick={toggleTheme}>
+        <main className="login-container">
+            <button className="theme-toggle" aria-label="Cambiar tema" onClick={toggleTheme}>
                 <svg
-                    class="theme-icon sun-icon"
+                    className="theme-icon sun-icon"
                     viewBox="0 0 24 24"
                     style={{ display: isDarkTheme ? 'none' : 'block' }}
                 >
@@ -26,7 +113,7 @@ export function Login() {
                     />
                 </svg>
                 <svg
-                    class="theme-icon moon-icon"
+                    className="theme-icon moon-icon"
                     viewBox="0 0 24 24"
                     style={{ display: isDarkTheme ? 'block' : 'none' }}
                 >
@@ -37,20 +124,15 @@ export function Login() {
                 </svg>
             </button>
 
-            <div class="login-card">
-                <div class="logo-section">
-                    <div class="logo-wrapper">
-                        <img src={logoImage} alt="Celifrut Logo" class="logo-image" />
-                    </div>
-                    <p>Dashboard de Administración</p>
-                </div>
+            <div className="login-card">
+                <Logo />
 
-                <div class="social-login">
+                <div className="social-login">
                     <h3>Inicia sesión con tu cuenta</h3>
 
-                    <div class="social-buttons">
-                        <button class="social-btn google-btn" id="googleLoginBtn" onClick={handleGoogleLogin}>
-                            <svg class="social-icon" viewBox="0 0 24 24">
+                    <div className="social-buttons">
+                        <button className="social-btn google-btn" id="googleLoginBtn" onClick={handleGoogleLogin}>
+                            <svg className="social-icon" viewBox="0 0 24 24">
                                 <path
                                     fill="#4285F4"
                                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -71,8 +153,8 @@ export function Login() {
                             Continuar con Google
                         </button>
 
-                        <button class="social-btn microsoft-btn" id="microsoftLoginBtn">
-                            <svg class="social-icon" viewBox="0 0 24 24">
+                        <button className="social-btn microsoft-btn" id="microsoftLoginBtn">
+                            <svg className="social-icon" viewBox="0 0 24 24">
                                 <path fill="#f35325" d="M1 1h10v10H1z" />
                                 <path fill="#81bc06" d="M13 1h10v10H13z" />
                                 <path fill="#05a6f0" d="M1 13h10v10H1z" />
@@ -86,7 +168,7 @@ export function Login() {
 
 
 
-                <div class="footer">
+                <div className="footer">
                     <p>&copy; 2025 Celifrut. Todos los derechos reservados.</p>
                 </div>
             </div>
