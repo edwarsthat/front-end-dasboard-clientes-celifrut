@@ -1,9 +1,10 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { config, buildApiUrl } from '../config/env'
+import { useGoogleOAuth } from '../utils/auth/googleAuth'
 
 interface User {
-    id: string
+    id?: string
     email: string
     name: string
     picture: string
@@ -15,6 +16,7 @@ interface AuthState {
     isLoading: boolean
     setUser: (user: User | null) => void
     checkAuth: () => Promise<boolean>
+    loginWithGoogle: () => Promise<void>
     logout: () => Promise<void>
 }
 
@@ -31,6 +33,52 @@ export const useAuthStore = create<AuthState>()(
                     isAuthenticated: !!user,
                     isLoading: false 
                 })
+            },
+
+            loginWithGoogle: async () => {
+                try {
+                    set({ isLoading: true })
+                    
+                    if (config.isDev) {
+                        console.log('🚀 Iniciando autenticación con Google...')
+                    }
+                    
+                    const userData = await useGoogleOAuth()
+                    
+                    if (config.isDev) {
+                        console.log('✅ Datos de usuario recibidos:', userData)
+                    }
+                    
+                    // Asegurar que tenemos los datos necesarios
+                    if (!userData || !userData.email) {
+                        throw new Error('Datos de usuario incompletos')
+                    }
+                    
+                    const user: User = {
+                        email: userData.email,
+                        name: userData.name || 'Usuario sin nombre',
+                        picture: userData.picture || ''
+                    }
+                    
+                    set({ 
+                        user, 
+                        isAuthenticated: true,
+                        isLoading: false 
+                    })
+                    
+                    if (config.isDev) {
+                        console.log('✅ Usuario autenticado y guardado en store:', user)
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Error en autenticación con Google:', error)
+                    set({ 
+                        user: null, 
+                        isAuthenticated: false,
+                        isLoading: false 
+                    })
+                    throw error // Re-lanzar el error para que el componente lo maneje
+                }
             },
 
             checkAuth: async (): Promise<boolean> => {

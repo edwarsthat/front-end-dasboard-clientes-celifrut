@@ -1,30 +1,21 @@
-import { useEffect, useState } from 'preact/hooks';
 import { Login } from './pages/Login'
 import './styles/global.css'
 import Dashboard from './pages/Dashboard';
+import { useAuthStore } from './stores/useAuthStore';
+import { useEffect } from 'preact/hooks';
 
 export function App() {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
-
+  const { isAuthenticated } = useAuthStore()
   useEffect(() => {
-    const handlePopState = () => {
-      setCurrentPath(window.location.pathname);
-    };
+    // Aquí puedes agregar lógica que dependa de isAuthenticated
+    console.log('🔄 Estado de autenticación cambiado:', isAuthenticated)
+  }, [isAuthenticated])
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
 
-  const renderPage = () => {
-    switch (currentPath) {
-      case '/dashboard':
-        return <Dashboard />;
-      case '/':
-      case '/login':
-      default:
-        return <Login />;
-    }
-  };
-
-  return renderPage();
+  return (
+    <div>
+      {isAuthenticated ? <Dashboard /> : <Login />}
+      {/* <Login /> */}
+    </div>
+  )
 }
