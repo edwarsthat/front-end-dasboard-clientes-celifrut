@@ -57,6 +57,16 @@
     --transition-fast: 0.15s ease;
     --transition-normal: 0.3s ease;
     --transition-slow: 0.5s ease;
+
+    /* Variables para Navbar */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f7fafc;
+    --bg-hover: #edf2f7;
+    --text-primary: #2d3748;
+    --text-secondary: #4a5568;
+    --border-color: #e1e5e9;
+    --danger-color: #e53e3e;
+    --danger-bg: #fed7d7;
 }
 
 .dark-theme {
@@ -81,6 +91,16 @@
     --color-border-accent: var(--color-Celifrut);
 
     --sombra--boton-menu: rgba(255, 255, 255, 0.35);
+
+    /* Variables para Navbar en tema oscuro */
+    --bg-primary: #1a202c;
+    --bg-secondary: #2d3748;
+    --bg-hover: #4a5568;
+    --text-primary: #f7fafc;
+    --text-secondary: #a0aec0;
+    --border-color: #4a5568;
+    --danger-color: #fc8181;
+    --danger-bg: #742a2a;
 }
 
 /* Reset y estilos base */
@@ -278,6 +298,40 @@ body::before {
 
 .rounded-xl {
     border-radius: var(--radius-xl);
+}
+
+/* ===== DASHBOARD STYLES ===== */
+.dashboard-page {
+    min-height: 100vh;
+    width: 100%;
+    background: var(--color-fondo);
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.dashboard-container h1 {
+    color: var(--color-title);
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.dashboard-content {
+    background: var(--color-card-bg);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--color-card-shadow) 0px 4px 8px;
+    border: 1px solid var(--border-Color);
+}
+
+.dashboard-content p {
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
 }
 
 /* Responsive utilities */

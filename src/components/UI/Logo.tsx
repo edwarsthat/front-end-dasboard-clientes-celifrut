@@ -15,7 +15,7 @@ export function Logo({ title, className = "" }: LogoProps) {
             <div className="logo-wrapper">
                 <img src={logoImage} alt="Celifrut Logo" className="logo-image" />
             </div>
-            <p>{displayTitle}</p>
+            {title && <p>{displayTitle}</p>}
         </div>
     )
 }
