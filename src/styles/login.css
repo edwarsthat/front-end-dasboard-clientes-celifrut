@@ -577,3 +577,196 @@
         height: 50px;
     }
 }
+
+/* ================================
+   ESTILOS PARA PÁGINA NOT FOUND
+   ================================ */
+
+.not-found-card {
+    max-width: 500px;
+    text-align: center;
+}
+
+.not-found-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.error-code {
+    margin: var(--spacing-lg) 0;
+}
+
+.error-number {
+    font-size: 6rem;
+    font-weight: 900;
+    color: var(--color-Celifrut);
+    text-shadow: 2px 2px 4px rgba(126, 186, 39, 0.2);
+    line-height: 1;
+    display: block;
+    background: linear-gradient(135deg, var(--color-Celifrut), var(--color-Celifrut-brigth));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pulse-error 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-error {
+    0% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.02);
+    }
+}
+
+.error-message {
+    margin: var(--spacing-md) 0;
+}
+
+.error-message h1 {
+    color: var(--color-title);
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    font-family: var(--font-family-primary);
+}
+
+.error-message p {
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 400px;
+}
+
+.error-illustration {
+    margin: var(--spacing-lg) 0;
+}
+
+.lost-icon {
+    width: 80px;
+    height: 80px;
+    color: var(--color-Celifrut);
+    opacity: 0.7;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.error-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    width: 100%;
+    max-width: 300px;
+    margin-top: var(--spacing-lg);
+}
+
+.primary-button, .secondary-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    border: none;
+    min-height: 48px;
+    font-family: var(--font-family-primary);
+}
+
+.primary-button {
+    background: linear-gradient(135deg, var(--color-Celifrut), var(--color-Celifrut-brigth));
+    color: white;
+    box-shadow: 0 4px 12px rgba(126, 186, 39, 0.3);
+}
+
+.primary-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(126, 186, 39, 0.4);
+    background: linear-gradient(135deg, var(--color-Celifrut-brigth), var(--color-Celifrut));
+}
+
+.primary-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(126, 186, 39, 0.3);
+}
+
+.secondary-button {
+    background: var(--color-card-bg);
+    color: var(--color-title);
+    border: 2px solid var(--border-Color);
+    box-shadow: 0 2px 8px var(--color-card-shadow);
+}
+
+.secondary-button:hover {
+    background: var(--color-fondo-hover);
+    border-color: var(--color-Celifrut);
+    color: var(--color-Celifrut);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--color-card-shadow);
+}
+
+.secondary-button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 4px var(--color-card-shadow);
+}
+
+/* Responsividad para dispositivos móviles */
+@media (max-width: 640px) {
+    .error-number {
+        font-size: 4rem;
+    }
+    
+    .error-message h1 {
+        font-size: var(--font-size-xl);
+    }
+    
+    .error-message p {
+        font-size: var(--font-size-sm);
+    }
+    
+    .lost-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .error-actions {
+        gap: var(--spacing-sm);
+    }
+    
+    .primary-button, .secondary-button {
+        padding: var(--spacing-sm) var(--spacing-lg);
+        font-size: var(--font-size-sm);
+    }
+}
+
+/* Mejoras para el tema oscuro */
+.dark-theme .not-found-card {
+    border-color: rgba(126, 186, 39, 0.2);
+}
+
+.dark-theme .theme-toggle {
+    background: rgba(26, 31, 54, 0.9);
+    border-color: rgba(126, 186, 39, 0.3);
+}
+
+.dark-theme .theme-toggle:hover {
+    background: rgba(26, 31, 54, 1);
+    border-color: var(--color-Celifrut);
+}

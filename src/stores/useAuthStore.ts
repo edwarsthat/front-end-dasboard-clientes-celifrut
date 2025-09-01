@@ -13,7 +13,6 @@ interface User {
 interface AuthState {
     user: User | null
     isAuthenticated: boolean
-    isLoading: boolean
     setUser: (user: User | null) => void
     checkAuth: () => Promise<boolean>
     loginWithGoogle: () => Promise<void>
@@ -25,19 +24,16 @@ export const useAuthStore = create<AuthState>()(
         (set) => ({
             user: null,
             isAuthenticated: false,
-            isLoading: false,
 
             setUser: (user: User | null) => {
                 set({ 
                     user, 
                     isAuthenticated: !!user,
-                    isLoading: false 
                 })
             },
 
             loginWithGoogle: async () => {
                 try {
-                    set({ isLoading: true })
                     
                     if (config.isDev) {
                         console.log('🚀 Iniciando autenticación con Google...')
@@ -63,7 +59,6 @@ export const useAuthStore = create<AuthState>()(
                     set({ 
                         user, 
                         isAuthenticated: true,
-                        isLoading: false 
                     })
                     
                     if (config.isDev) {
@@ -75,7 +70,6 @@ export const useAuthStore = create<AuthState>()(
                     set({ 
                         user: null, 
                         isAuthenticated: false,
-                        isLoading: false 
                     })
                     throw error // Re-lanzar el error para que el componente lo maneje
                 }
@@ -83,7 +77,6 @@ export const useAuthStore = create<AuthState>()(
 
             checkAuth: async (): Promise<boolean> => {
                 try {
-                    set({ isLoading: true })
                     
                     const response = await fetch(buildApiUrl(config.auth.meUrl), {
                         credentials: 'include',
@@ -102,7 +95,6 @@ export const useAuthStore = create<AuthState>()(
                         set({ 
                             user: data.user, 
                             isAuthenticated: true,
-                            isLoading: false 
                         })
                         
                         if (config.isDev) {
@@ -114,7 +106,6 @@ export const useAuthStore = create<AuthState>()(
                         set({ 
                             user: null, 
                             isAuthenticated: false,
-                            isLoading: false 
                         })
                         
                         if (config.isDev) {
@@ -128,7 +119,6 @@ export const useAuthStore = create<AuthState>()(
                     set({ 
                         user: null, 
                         isAuthenticated: false,
-                        isLoading: false 
                     })
                     return false
                 }
@@ -151,7 +141,6 @@ export const useAuthStore = create<AuthState>()(
                     set({ 
                         user: null, 
                         isAuthenticated: false,
-                        isLoading: false 
                     })
                     
                     if (config.isDev) {
@@ -164,7 +153,6 @@ export const useAuthStore = create<AuthState>()(
                     set({ 
                         user: null, 
                         isAuthenticated: false,
-                        isLoading: false 
                     })
                 }
             }

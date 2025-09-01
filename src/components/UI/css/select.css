@@ -1,0 +1,61 @@
+/* Componente Select personalizado */
+.custom-select {
+    padding: 10px 12px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 14px;
+    font-family: inherit;
+    min-width: 200px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    color: #2c3e50;
+}
+
+.custom-select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.custom-select:hover:not(:disabled) {
+    border-color: #bdc3c7;
+}
+
+.custom-select:disabled {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+    opacity: 0.6;
+    color: #6c757d;
+}
+
+.custom-select option {
+    padding: 8px;
+}
+
+.custom-select option:disabled {
+    color: #adb5bd;
+    background-color: #f8f9fa;
+}
+
+/* Variante para tema oscuro */
+.dark-theme .custom-select {
+    background-color: #2c3e50;
+    border-color: #34495e;
+    color: #ecf0f1;
+}
+
+.dark-theme .custom-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.dark-theme .custom-select:disabled {
+    background-color: #34495e;
+    color: #7f8c8d;
+}
+
+.dark-theme .custom-select option {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}

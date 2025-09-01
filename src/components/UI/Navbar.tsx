@@ -1,19 +1,20 @@
 import { useState } from 'preact/hooks'
 import { useAuthStore } from '../../stores/useAuthStore'
-import { useThemeStore } from '../../stores/useThemeStore'
 import { Logo } from './Logo'
 import { config } from '../../config/env'
 import '../../styles/navbar.css'
+import { useAppStore } from '../../stores/useAppStore'
+import { useThemeStore } from '../../stores/useThemeStore'
 
 interface NavbarProps {
     className?: string;
 }
 
 export default function Navbar({ className = "" }: NavbarProps) {
-    const { user, logout, isLoading } = useAuthStore()
+    const { user, logout } = useAuthStore()
     const { isDarkTheme, toggleTheme } = useThemeStore()
     const [showUserMenu, setShowUserMenu] = useState(false)
-    console.log('User:', user)
+    const isLoading = useAppStore(state => state.isLoading)
     const handleLogout = async () => {
         try {
             await logout()

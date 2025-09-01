@@ -1,7 +1,7 @@
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
-interface ThemeState {
+interface themeStore {
     isDarkTheme: boolean
     theme: 'light' | 'dark'
     toggleTheme: () => void
@@ -9,7 +9,8 @@ interface ThemeState {
     initializeTheme: () => void
 }
 
-export const useThemeStore = create<ThemeState>()(
+
+export const useThemeStore = create<themeStore>()(
     persist(
         (set, get) => ({
             isDarkTheme: false,
@@ -19,41 +20,42 @@ export const useThemeStore = create<ThemeState>()(
             initializeTheme: () => {
                 const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
                 const shouldUseDark = get().isDarkTheme || prefersDark
-                
-                set({ 
+
+                set({
                     isDarkTheme: shouldUseDark,
                     theme: shouldUseDark ? 'dark' : 'light'
                 })
-                
+
                 document.documentElement.classList.toggle("dark-theme", shouldUseDark)
             },
 
             // Alternar entre temas
             toggleTheme: () => {
                 const newTheme = !get().isDarkTheme
-                
-                set({ 
+
+                set({
                     isDarkTheme: newTheme,
                     theme: newTheme ? 'dark' : 'light'
                 })
-                
+
                 document.documentElement.classList.toggle("dark-theme", newTheme)
             },
 
             // Establecer tema específico
             setTheme: (theme: 'light' | 'dark') => {
                 const isDark = theme === 'dark'
-                
-                set({ 
+
+                set({
                     isDarkTheme: isDark,
-                    theme 
+                    theme
                 })
-                
+
                 document.documentElement.classList.toggle("dark-theme", isDark)
             }
+
         }),
         {
-            name: 'celifrut-theme', // nombre en localStorage
+            name: "celifrut-ui",
             storage: createJSONStorage(() => localStorage),
         }
     )

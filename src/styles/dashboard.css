@@ -1,0 +1,275 @@
+/* Estilos del Dashboard */
+.dashboard-page {
+    min-height: 100vh;
+    background: inherit;
+}
+
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.dashboard-container h1 {
+    color: var(--color-texto);
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-xl);
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor de botones de navegación */
+.navigation-buttons {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-2xl);
+    padding: var(--spacing-lg);
+    background: var(--color-card-bg);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 4px 20px var(--color-card-shadow);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-Color);
+}
+
+/* Estilos de los botones de navegación */
+.nav-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: transparent;
+    color: var(--color-text);
+    border: none;
+    border-radius: var(--radius-lg);
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.nav-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-Celifrut), var(--color-Celifrut-brigth));
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    z-index: -1;
+}
+
+.nav-button:hover::before {
+    opacity: 0.1;
+}
+
+.nav-button:hover {
+    color: var(--color-Celifrut);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(126, 186, 39, 0.3);
+}
+
+/* Estado activo del botón */
+.nav-button.active {
+    background: linear-gradient(135deg, var(--color-Celifrut), var(--color-Celifrut-brigth));
+    color: white;
+    box-shadow: 0 4px 16px rgba(126, 186, 39, 0.4);
+}
+
+.nav-button.active::before {
+    opacity: 0;
+}
+
+.nav-button.active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(126, 186, 39, 0.5);
+    color: white;
+}
+
+/* Icono del botón (si se agrega en el futuro) */
+.nav-button-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* Separadores entre botones */
+.nav-separator {
+    width: 1px;
+    height: 24px;
+    background: var(--border-Color);
+    opacity: 0.5;
+}
+
+/* Barrita indicadora debajo de los botones */
+.navigation-indicator {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    background: var(--color-input-bg);
+    border-radius: 2px;
+    margin-top: var(--spacing-md);
+    overflow: hidden;
+}
+
+.navigation-indicator::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px; /* Ajustar según el ancho del botón activo */
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-Celifrut), var(--color-Celifrut-brigth));
+    border-radius: 2px;
+    transition: all var(--transition-normal);
+    box-shadow: 0 2px 8px rgba(126, 186, 39, 0.4);
+}
+
+/* Variaciones para diferentes estados de la barrita */
+.navigation-indicator.precios::after {
+    left: 0;
+    width: 100px; /* Ancho aproximado del botón "Precios" */
+}
+
+/* Para el botón Rendimiento */
+.navigation-indicator.rendimiento::after {
+    left: 116px; /* Posición del segundo botón */
+    width: 120px;
+}
+
+/* Para futuros botones */
+.navigation-indicator.inventario::after {
+    left: 252px; /* Posición del tercer botón */
+    width: 120px;
+}
+
+.navigation-indicator.reportes::after {
+    left: 388px; /* Posición del cuarto botón */
+    width: 110px;
+}
+
+/* Contenido del dashboard */
+.dashboard-content {
+    background: var(--color-card-bg);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: 0 4px 20px var(--color-card-shadow);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-Color);
+    min-height: 400px;
+}
+
+.dashboard-content p {
+    color: var(--color-text);
+    font-size: var(--font-size-lg);
+    text-align: center;
+    margin-top: var(--spacing-xl);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: var(--spacing-lg);
+    }
+    
+    .dashboard-container h1 {
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .navigation-buttons {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-md);
+    }
+    
+    .nav-separator {
+        width: 100%;
+        height: 1px;
+    }
+    
+    .navigation-indicator {
+        display: none; /* Ocultar la barrita en móviles */
+    }
+    
+    .nav-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-container {
+        padding: var(--spacing-md);
+    }
+    
+    .navigation-buttons {
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .dashboard-content {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* Estilos para secciones de filtros */
+.filters-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background: var(--color-card-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 10px var(--color-card-shadow);
+    border: 1px solid var(--border-Color);
+}
+
+.filters-section > * {
+    flex: 1;
+    min-width: 200px;
+}
+
+.precios-view {
+    width: 100%;
+}
+
+.precios-view h1 {
+    color: var(--color-texto);
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-2xl);
+}
+
+.precios-content {
+    padding: var(--spacing-lg);
+    background: var(--color-card-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 10px var(--color-card-shadow);
+    border: 1px solid var(--border-Color);
+}
+
+.precios-content p {
+    color: var(--color-texto);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Responsive para filtros */
+@media (max-width: 768px) {
+    .filters-section {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .filters-section > * {
+        min-width: unset;
+    }
+}

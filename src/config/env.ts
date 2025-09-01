@@ -16,6 +16,9 @@ interface EnvConfig {
         name: string
         version: string
     }
+    dashBoard: {
+        precios: string
+    }
 
     // External URLs
     companyWebsite: string
@@ -31,13 +34,17 @@ const getEnvVar = (key: string, defaultValue: string = ''): string => {
 
 // Configuración exportada
 export const config: EnvConfig = {
-    apiUrl: getEnvVar('VITE_API_URL', 'http://localhost:3001'),
+    apiUrl: getEnvVar('VITE_API_URL', 'http://localhost:3001/api'),
 
     auth: {
-        googleUrl: getEnvVar('VITE_AUTH_GOOGLE_URL', '/api/auth/google'),
-        microsoftUrl: getEnvVar('VITE_AUTH_MICROSOFT_URL', '/api/auth/microsoft'),
-        meUrl: getEnvVar('VITE_AUTH_ME_URL', '/api/auth/me'),
-        logoutUrl: getEnvVar('VITE_AUTH_LOGOUT_URL', '/api/auth/logout')
+        googleUrl: getEnvVar('VITE_AUTH_GOOGLE_URL', '/auth/google'),
+        microsoftUrl: getEnvVar('VITE_AUTH_MICROSOFT_URL', '/auth/microsoft'),
+        meUrl: getEnvVar('VITE_AUTH_ME_URL', '/auth/me'),
+        logoutUrl: getEnvVar('VITE_AUTH_LOGOUT_URL', '/auth/logout')
+    },
+
+    dashBoard: {
+        precios: getEnvVar('VITE_DASHBOARD_PRECIOS', '/dashboard/precios'),
     },
 
     app: {
