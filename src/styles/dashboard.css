@@ -239,6 +239,49 @@
     min-width: 200px;
 }
 
+/* Botón de búsqueda en filtros */
+.search-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: 0.75rem 1.5rem;
+    background: var(--color-Celifrut);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    box-shadow: 0 2px 4px rgba(126, 186, 39, 0.2);
+    min-width: auto;
+    flex-shrink: 0;
+}
+
+.search-button:hover {
+    background: var(--color-Celifrut-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(126, 186, 39, 0.3);
+}
+
+.search-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(126, 186, 39, 0.2);
+}
+
+.search-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(126, 186, 39, 0.2);
+}
+
+.search-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
 .precios-view {
     width: 100%;
 }
@@ -262,6 +305,229 @@
     margin-bottom: var(--spacing-sm);
 }
 
+/* ===== PRECIOS RESULTS SECTION ===== */
+.precios-results {
+    width: 100%;
+}
+
+.precios-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-Celifrut);
+}
+
+.precios-header h3 {
+    color: var(--color-title);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    margin: 0;
+}
+
+.proveedor-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.proveedor-name {
+    background: var(--color-Celifrut);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+/* ===== PRECIOS GRID ===== */
+.precios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.precio-category-card {
+    background: var(--color-card-bg);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: 0 4px 12px var(--color-card-shadow);
+    border: 2px solid var(--border-Color);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.precio-category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--color-Celifrut);
+    transition: width var(--transition-normal);
+}
+
+.precio-category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--color-card-shadow);
+}
+
+.precio-category-card:hover::before {
+    width: 8px;
+}
+
+/* Colores específicos para cada categoría */
+.precio-category-card.exportacion::before {
+    background: var(--color-Celifrut);
+}
+
+.precio-category-card.descarte::before {
+    background: #ff6b6b;
+}
+
+.precio-category-card.nacional::before {
+    background: #4ecdc4;
+}
+
+/* ===== CATEGORY HEADER ===== */
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-Color);
+}
+
+.category-icon {
+    color: var(--color-Celifrut);
+    flex-shrink: 0;
+}
+
+.category-header h4 {
+    color: var(--color-title);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ===== PRECIOS LIST ===== */
+.precios-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.precio-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--color-input-bg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-input-border);
+    transition: all var(--transition-fast);
+}
+
+.precio-item:hover {
+    background: var(--color-fondo-hover);
+    transform: scale(1.02);
+}
+
+.precio-item.featured {
+    background: linear-gradient(135deg, var(--color-Celifrut-brigth), var(--color-Celifrut));
+    color: white;
+    font-weight: 600;
+}
+
+.precio-item.featured:hover {
+    background: linear-gradient(135deg, var(--color-Celifrut), var(--color-Celifrut-dark));
+}
+
+.categoria-name {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: inherit;
+    text-transform: capitalize;
+}
+
+.precio-value {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: inherit;
+}
+
+/* ===== PRECIOS SUMMARY ===== */
+.precios-summary {
+    background: var(--color-input-bg);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--border-Color);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) 0;
+}
+
+.summary-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-Color);
+    margin-bottom: var(--spacing-sm);
+}
+
+.summary-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.summary-value {
+    font-size: var(--font-size-sm);
+    color: var(--color-title);
+    font-weight: 600;
+}
+
+/* ===== NO DATA MESSAGE ===== */
+.no-data-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2xl);
+    text-align: center;
+    color: var(--color-text);
+}
+
+.no-data-icon {
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.5;
+}
+
+.no-data-icon svg {
+    color: var(--color-Celifrut);
+}
+
+.no-data-message h3 {
+    color: var(--color-title);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+}
+
+.no-data-message p {
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+    margin: 0;
+    max-width: 400px;
+    line-height: 1.5;
+}
+
 /* Responsive para filtros */
 @media (max-width: 768px) {
     .filters-section {
@@ -271,5 +537,56 @@
     
     .filters-section > * {
         min-width: unset;
+    }
+
+    .search-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Responsive para precios */
+    .precios-header {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        align-items: flex-start;
+    }
+
+    .precios-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .precio-category-card {
+        padding: var(--spacing-md);
+    }
+
+    .precios-summary {
+        padding: var(--spacing-md);
+    }
+
+    .summary-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .precios-header h3 {
+        font-size: var(--font-size-base);
+    }
+
+    .category-header h4 {
+        font-size: var(--font-size-base);
+    }
+
+    .precio-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+
+    .no-data-message {
+        padding: var(--spacing-lg);
     }
 }

@@ -16,7 +16,7 @@ interface DateInputProps {
 export function DateInput({ 
     value, 
     onChange, 
-    placeholder = "Seleccionar fecha",
+    placeholder = "Seleccionar semana",
     disabled = false,
     className = "",
     name,
@@ -30,17 +30,21 @@ export function DateInput({
     };
 
     return (
-        <input
-            type="week"
-            className={`custom-date-input ${className}`}
-            value={value || ""}
-            onChange={handleChange}
-            placeholder={placeholder}
-            disabled={disabled}
-            name={name}
-            id={id}
-            min={min}
-            max={max}
-        />
+        <div className="date-input-wrapper">
+            <input
+                type="week"
+                className={`custom-date-input ${className}`}
+                value={value || ""}
+                onChange={handleChange}
+                placeholder={placeholder}
+                disabled={disabled}
+                name={name}
+                id={id}
+                min={min}
+                max={max}
+                lang="es-ES"
+                title="Seleccionar semana"
+            />
+        </div>
     );
 }

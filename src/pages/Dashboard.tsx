@@ -29,7 +29,7 @@ export function Dashboard(){
         <div className="dashboard-page">
             <Navbar />
             <main className="dashboard-container">
-                <h1 style={{color:"white"}}>Dashboard de Clientes - Celifrut</h1>
+                <h1 style={{color:"white"}}>Dashboard de Proveedores - Celifrut</h1>
                 
                 {/* Botones de navegación */}
                 <div className="navigation-buttons">
