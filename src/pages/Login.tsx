@@ -7,7 +7,7 @@ import { useThemeStore } from '../stores/useThemeStore.ts'
 import { useLocation } from 'preact-iso'
 
 export function Login() {
-    const { loginWithGoogle } = useAuthStore()
+    const { loginWithGoogle, loginWithMicrosoft } = useAuthStore()
     const isLoading = useAppStore(state => state.isLoading);
     const setLoading = useAppStore(state => state.setLoading);
     const { isDarkTheme, toggleTheme } = useThemeStore();
@@ -28,6 +28,26 @@ export function Login() {
         } catch (error: any) {
             console.error('❌ Error en login:', error)
             alert(error?.message || 'Error al iniciar sesión con Google')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    async function handleMicrosoftLogin() {
+        if (isLoading) {
+            console.log('⏳ Login en proceso, espere...')
+            return
+        }
+        setLoading(true)
+
+        try {
+            console.log('🚀 Iniciando login con Microsoft...')
+            await loginWithMicrosoft()
+            console.log('✅ Login exitoso!')
+            loc.route('/dashboard', true)
+        } catch (error: any) {
+            console.error('❌ Error en login:', error)
+            alert(error?.message || 'Error al iniciar sesión con Microsoft')
         } finally {
             setLoading(false)
         }
@@ -102,14 +122,28 @@ export function Login() {
                             )}
                         </button>
 
-                        <button className="social-btn microsoft-btn" id="microsoftLoginBtn">
-                            <svg className="social-icon" viewBox="0 0 24 24">
-                                <path fill="#f35325" d="M1 1h10v10H1z" />
-                                <path fill="#81bc06" d="M13 1h10v10H13z" />
-                                <path fill="#05a6f0" d="M1 13h10v10H1z" />
-                                <path fill="#ffba08" d="M13 13h10v10H13z" />
-                            </svg>
-                            Continuar con Microsoft
+                        <button
+                            className={`social-btn microsoft-btn ${isLoading ? 'loading' : ''}`}
+                            id="microsoftLoginBtn"
+                            onClick={handleMicrosoftLogin}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? (
+                                <>
+                                    <div className="spinner"></div>
+                                    Iniciando sesión...
+                                </>
+                            ) : (
+                                <>
+                                    <svg className="social-icon" viewBox="0 0 24 24">
+                                        <path fill="#f35325" d="M1 1h10v10H1z" />
+                                        <path fill="#81bc06" d="M13 1h10v10H13z" />
+                                        <path fill="#05a6f0" d="M1 13h10v10H1z" />
+                                        <path fill="#ffba08" d="M13 13h10v10H13z" />
+                                    </svg>
+                                    Continuar con Microsoft
+                                </>
+                            )}
                         </button>
                     </div>
 

@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { config, buildApiUrl } from '../config/env'
 import { useGoogleOAuth } from '../utils/auth/googleAuth'
+import { useMicrosoftOAuth } from '../utils/auth/microsoftAuth'
 
 interface User {
     id?: string
@@ -16,6 +17,7 @@ interface AuthState {
     setUser: (user: User | null) => void
     checkAuth: () => Promise<boolean>
     loginWithGoogle: () => Promise<void>
+    loginWithMicrosoft: () => Promise<void>
     logout: () => Promise<void>
 }
 
@@ -31,7 +33,6 @@ export const useAuthStore = create<AuthState>()(
                     isAuthenticated: !!user,
                 })
             },
-
             loginWithGoogle: async () => {
                 try {
                     
@@ -74,7 +75,48 @@ export const useAuthStore = create<AuthState>()(
                     throw error // Re-lanzar el error para que el componente lo maneje
                 }
             },
-
+            loginWithMicrosoft: async () => {
+                try {
+                    
+                    if (config.isDev) {
+                        console.log('🚀 Iniciando autenticación con Microsoft...')
+                    }
+                    
+                    const userData = await useMicrosoftOAuth()
+                    
+                    if (config.isDev) {
+                        console.log('✅ Datos de usuario recibidos:', userData)
+                    }
+                    
+                    // Asegurar que tenemos los datos necesarios
+                    if (!userData || !userData.email) {
+                        throw new Error('Datos de usuario incompletos')
+                    }
+                    
+                    const user: User = {
+                        email: userData.email,
+                        name: userData.name || 'Usuario sin nombre',
+                        picture: userData.picture || ''
+                    }
+                    
+                    set({ 
+                        user, 
+                        isAuthenticated: true,
+                    })
+                    
+                    if (config.isDev) {
+                        console.log('✅ Usuario autenticado y guardado en store:', user)
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Error en autenticación con Microsoft:', error)
+                    set({ 
+                        user: null, 
+                        isAuthenticated: false,
+                    })
+                    throw error // Re-lanzar el error para que el componente lo maneje
+                }
+            },
             checkAuth: async (): Promise<boolean> => {
                 try {
                     
@@ -123,7 +165,6 @@ export const useAuthStore = create<AuthState>()(
                     return false
                 }
             },
-
             logout: async () => {
                 try {
                     if (config.isDev) {
