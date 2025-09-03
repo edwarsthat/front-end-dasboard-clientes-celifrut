@@ -16,8 +16,8 @@ interface AuthState {
     isAuthenticated: boolean
     setUser: (user: User | null) => void
     checkAuth: () => Promise<boolean>
-    loginWithGoogle: () => Promise<void>
-    loginWithMicrosoft: () => Promise<void>
+    loginWithGoogle: () => Promise<boolean>
+    loginWithMicrosoft: () => Promise<boolean>
     logout: () => Promise<void>
 }
 
@@ -66,6 +66,8 @@ export const useAuthStore = create<AuthState>()(
                     if (config.isDev) {
                         console.log('✅ Usuario autenticado y guardado en store:', user)
                     }
+
+                    return true
                     
                 } catch (error) {
                     console.error('❌ Error en autenticación con Google:', error)
@@ -99,6 +101,7 @@ export const useAuthStore = create<AuthState>()(
                         name: userData.name || 'Usuario sin nombre',
                         picture: userData.picture || ''
                     }
+                    console.log(user)
                     
                     set({ 
                         user, 
@@ -109,6 +112,9 @@ export const useAuthStore = create<AuthState>()(
                         console.log('✅ Usuario autenticado y guardado en store:', user)
                     }
                     
+                    return true
+
+
                 } catch (error) {
                     console.error('❌ Error en autenticación con Microsoft:', error)
                     set({ 

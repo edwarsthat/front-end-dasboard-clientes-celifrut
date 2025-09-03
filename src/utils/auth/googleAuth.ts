@@ -61,6 +61,7 @@ function pollUntilPopupClosed(popup: Window, intervalMs = 500): Promise<void> {
 }
 
 export async function useGoogleOAuth() {
+
     // Usar variables de entorno en lugar de constantes hardcodeadas
     const googleAuthUrl = buildApiUrl(config.auth.googleUrl);
     const meUrl = buildApiUrl(config.auth.meUrl);

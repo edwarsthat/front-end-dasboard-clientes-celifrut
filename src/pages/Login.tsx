@@ -22,9 +22,11 @@ export function Login() {
 
         try {
             console.log('🚀 Iniciando login con Google...')
-            await loginWithGoogle()
-            console.log('✅ Login exitoso!')
-            loc.route('/dashboard', true)
+            const result = await loginWithGoogle()
+            if(result) {
+                console.log('✅ Login exitoso!')
+                loc.route('/dashboard', true)
+            }
         } catch (error: any) {
             console.error('❌ Error en login:', error)
             alert(error?.message || 'Error al iniciar sesión con Google')
@@ -42,9 +44,11 @@ export function Login() {
 
         try {
             console.log('🚀 Iniciando login con Microsoft...')
-            await loginWithMicrosoft()
-            console.log('✅ Login exitoso!')
-            loc.route('/dashboard', true)
+            const result = await loginWithMicrosoft()
+            if(result) {
+                console.log('✅ Login exitoso!')
+                loc.route('/dashboard', true)
+            }
         } catch (error: any) {
             console.error('❌ Error en login:', error)
             alert(error?.message || 'Error al iniciar sesión con Microsoft')
