@@ -1,0 +1,2 @@
+/*
+  Content-Security-Policy: img-src 'self' data: https://lh3.googleusercontent.com https://ui-avatars.com https://graph.microsoft.com https://login.microsoftonline.com https://account.live.com https://*.googleusercontent.com; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://accounts.google.com https://login.microsoftonline.com;
