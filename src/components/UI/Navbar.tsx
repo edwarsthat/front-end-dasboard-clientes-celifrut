@@ -75,6 +75,11 @@ export default function Navbar({ className = "" }: NavbarProps) {
                                         src={user.picture}
                                         alt={`Avatar de ${user.name}`}
                                         className="user-avatar"
+                                        onError={(e) => {
+                                            const target = e.target as HTMLImageElement;
+                                            target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=0D8ABC&color=fff&size=96`;
+                                        }}
+                                        referrerPolicy="no-referrer"
                                     />
                                     <svg
                                         className={`dropdown-arrow ${showUserMenu ? 'open' : ''}`}
@@ -94,6 +99,11 @@ export default function Navbar({ className = "" }: NavbarProps) {
                                                 src={user.picture}
                                                 alt={`Avatar de ${user.name}`}
                                                 className="dropdown-avatar"
+                                                onError={(e) => {
+                                                    const target = e.target as HTMLImageElement;
+                                                    target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=0D8ABC&color=fff&size=96`;
+                                                }}
+                                                referrerPolicy="no-referrer"
                                             />
                                             <div className="dropdown-user-info">
                                                 <span className="dropdown-name">{user.name}</span>

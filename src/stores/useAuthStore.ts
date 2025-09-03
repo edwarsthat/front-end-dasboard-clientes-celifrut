@@ -56,7 +56,8 @@ export const useAuthStore = create<AuthState>()(
                         name: userData.name || 'Usuario sin nombre',
                         picture: userData.picture || ''
                     }
-                    
+                    console.log("User:", user)
+
                     set({ 
                         user, 
                         isAuthenticated: true,
