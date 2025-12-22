@@ -39,33 +39,69 @@ export function PreciosView({ data }: PreciosViewProps) {
 
         const [year, semana] = selectedWeek.split("-W");
 
+        // 🔍 AGREGAR ESTOS LOGS:
+    console.log("=== DEBUG BÚSQUEDA ===");
+    console.log("selectedWeek:", selectedWeek);
+    console.log("year:", year, typeof year);
+    console.log("semana:", semana, typeof semana);
+    console.log("selectedProveedor:", selectedProveedor);
+    console.log("selectedTipoFruta:", selectedTipoFruta);
+
+        //1. Buscar el proveedor seleccionado
         const proveedor = data?.user.proveedorData.find(p => p._id === selectedProveedor);
         if (!proveedor) {
-            console.warn("No hay precios disponibles para el proveedor seleccionado.");
+            alert("No hay precios disponibles para el proveedor seleccionado.");
+            // console.warn("No hay precios disponibles para el proveedor seleccionado.");
+            setPrecioSeleccionado(null);
             return;
         }
 
+         // 🔍 AGREGAR ESTE LOG PARA VER TODOS LOS PRECIOS:Jp
+        console.log("📊 TODOS los precios del usuario:", data?.user.preciosData);
+
+        //2. Filtrar los precios por el proveedor seleccionado Jp
         const preciosProveedor = data?.user.preciosData.filter(precio => precio.predios.includes(proveedor._id))
 
+        console.log("🏢 Precios filtrados por proveedor:", preciosProveedor);
+        console.log("📅 Buscando precios para: semana=" + semana + ", año=" + year);
+
         if (!preciosProveedor || preciosProveedor.length === 0) {
-            console.warn("No hay precios disponibles para la semana seleccionada.");
+            alert("No hay precios disponibles para el proveedor seleccionado.");
+            // console.warn("No hay precios disponibles para la semana seleccionada.");
+            setPrecioSeleccionado(null); //LIMPIAR SELECCIÓN ANTERIOR.JP
             return;
         }
 
+        //3. Filtrar los precios por la semana y año seleccionados Jp
         const precioSemana = preciosProveedor.filter(precio => precio.week === parseInt(semana) && precio.year === parseInt(year));
+
+        console.log("📆 Precios filtrados por semana:", precioSemana);
+
         if (precioSemana.length === 0) {
-            console.warn("No hay precios disponibles para la semana seleccionada.");
+            alert(`No hay precios disponibles para la semana ${semana} del año ${year} seleccionada.`);
+            setPrecioSeleccionado(null); //LIMPIAR SELECCIÓN ANTERIOR.JP
+            // console.warn("No hay precios disponibles para la semana seleccionada.");
             return;
         }
+
         console.log(precioSemana);
         console.log("selectedTipoFruta", selectedTipoFruta);
 
+        //4. Buscar el precio para el tipo de fruta seleccionado Jp
         const precioTipoFrutaSemana = precioSemana.find(precio => precio.tipoFruta === selectedTipoFruta);
+
+        console.log("🍋 Precio tipo fruta:", precioTipoFrutaSemana);
+
         if (!precioTipoFrutaSemana) {
-            alert("No hay precios disponibles para el tipo de fruta seleccionada.");
+            //Buscar el nombre del tipo de fruta para el mensaje Jp
+            const nombreTipoFruta = data?.tiposFruta.find(tipo => tipo._id === selectedTipoFruta)?.tipoFruta || selectedTipoFruta;
+
+            alert(`No hay precios disponibles para el tipo de fruta ${nombreTipoFruta} seleccionada.`);
+            setPrecioSeleccionado(null); //LIMPIAR SELECCIÓN ANTERIOR.JP
             return;
         }
-
+        //5. ✅todo bien, establecer el precio seleccionado Jp
+        console.log("✅ Precio encontrado:", precioTipoFrutaSemana);
         setPrecioSeleccionado(precioTipoFrutaSemana);
     }
 
@@ -126,14 +162,23 @@ export function PreciosView({ data }: PreciosViewProps) {
                                     <h4>Exportación</h4>
                                 </div>
                                 <div className="precios-list">
-                                    {Object.entries(precioSeleccionado.exportacion).map(([categoria, precio]) => (
+                                    {Object.entries(precioSeleccionado.exportacion).map(([categoria, precio]) => {
+
+                                        //Determinar si la categoría es numérica o string para aplicar Tipo diferente Jp
+                                        const isNumeric = !isNaN(Number(categoria));
+                                        const isString = typeof categoria === 'string';
+                                        const displayName = (isNumeric || isString) ? `Tipo ${categoria}` : categoria;
+
+                                        return (
+
                                         <div key={categoria} className="precio-item">
-                                            <span className="categoria-name">{categoria}</span>
+                                            <span className="categoria-name">{displayName}</span>
                                             <span className="precio-value">
                                                 ${precio?.toLocaleString() || 'N/A'}
                                             </span>
                                         </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
 
