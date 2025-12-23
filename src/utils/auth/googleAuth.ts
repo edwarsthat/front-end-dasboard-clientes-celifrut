@@ -18,34 +18,73 @@ export function openCenteredPopup(url: string, name = "google-oauth", w = 520, h
     return popup;
 }
 
-
-function waitForOAuthMessage(allowedOrigin: string, timeoutMs = 5_000): Promise<"success" | "error"> {
+function waitForOAuthResult(timeoutMs = 30_000): Promise<any> {
     return new Promise((resolve, reject) => {
-        let settled = false;
+        const channel = new BroadcastChannel('oauth_channel');
+        let resolved = false;
 
         const timer = setTimeout(() => {
-            if (!settled) {
-                settled = true;
-                window.removeEventListener("message", onMessage);
+            if (!resolved) {
+                resolved = true;
+                channel.close();
+                
+                // Fallback: intentar leer de localStorage
+                try {
+                    const stored = localStorage.getItem('oauth_result');
+                    if (stored) {
+                        localStorage.removeItem('oauth_result');
+                        const data = JSON.parse(stored);
+                        resolve(data);
+                        return;
+                    }
+                } catch (e) {
+                    console.error("Error leyendo localStorage:", e);
+                }
+                
                 reject(new Error("Timeout esperando respuesta de OAuth"));
             }
         }, timeoutMs);
 
-        const onMessage = (event: MessageEvent) => {
-            // Seguridad: solo aceptar mensajes del backend
-            if (event.origin !== allowedOrigin) return;
-            const data = event.data;
-            if (!data || data.type !== "oauth_callback") return;
-
-            if (!settled) {
-                settled = true;
-                clearTimeout(timer);
-                window.removeEventListener("message", onMessage);
-                resolve(data.status === "success" ? "success" : "error");
+        // Escuchar por BroadcastChannel
+        channel.onmessage = (event) => {
+            if (event.data && event.data.type === "oauth_callback") {
+                if (!resolved) {
+                    resolved = true;
+                    clearTimeout(timer);
+                    channel.close();
+                    
+                    // Limpiar localStorage si existe
+                    try {
+                        localStorage.removeItem('oauth_result');
+                    } catch (e) {}
+                    
+                    console.log("✅ Resultado OAuth recibido vía BroadcastChannel:", event.data);
+                    resolve(event.data);
+                }
             }
         };
 
-        window.addEventListener("message", onMessage);
+        // También escuchar cambios en localStorage (fallback)
+        const storageHandler = (e: StorageEvent) => {
+            if (e.key === 'oauth_result' && e.newValue && !resolved) {
+                try {
+                    const data = JSON.parse(e.newValue);
+                    if (data.type === "oauth_callback") {
+                        resolved = true;
+                        clearTimeout(timer);
+                        channel.close();
+                        window.removeEventListener('storage', storageHandler);
+                        localStorage.removeItem('oauth_result');
+                        console.log("✅ Resultado OAuth recibido vía localStorage:", data);
+                        resolve(data);
+                    }
+                } catch (err) {
+                    console.error("Error parseando oauth_result:", err);
+                }
+            }
+        };
+        
+        window.addEventListener('storage', storageHandler);
     });
 }
 
@@ -68,19 +107,23 @@ export async function useGoogleOAuth() {
 
     // 1) Abrimos popup DIRECTO al backend (no hay fetch previo)
     const popup = openCenteredPopup(googleAuthUrl);
-    console.log("Popup abierto:", popup);
-    // 2) Esperamos el postMessage del callback (o fallback por cierre)
-    let status: "success" | "error";
+    console.log("Google popup abierto:", popup);
+    
+    // 2) Esperamos el resultado del callback vía BroadcastChannel/localStorage (o fallback por cierre)
+    let result;
     try {
-        status = await waitForOAuthMessage(config.apiUrl, 5_000);
-        console.log("OAuth message status:", status);
+        result = await waitForOAuthResult(10_000); // 10s segundos para dar tiempo al usuario
+        console.log("Google OAuth result:", result);
     } catch (e) {
-        console.error("Error esperando mensaje de OAuth:", e);
+        console.error("Error esperando mensaje de OAuth Google:", e);
         await pollUntilPopupClosed(popup);
-        status = "success"; // intentamos igual consultar /auth/me
+        // intentamos igual consultar /auth/me
+        result = { status: "success" };
     }
 
-    if (status !== "success") throw new Error("Error en autenticación con Google");
+    if (result.status !== "success") {
+        throw new Error(result.error?.message || "Error en autenticación con Google");
+    }
 
     // 3) Ya debe existir sesión (cookie HttpOnly). Consultamos quién es:
     const meResp = await fetch(meUrl, { credentials: "include" });
