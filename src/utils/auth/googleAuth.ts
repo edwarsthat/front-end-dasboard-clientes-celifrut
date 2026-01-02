@@ -112,10 +112,10 @@ export async function useGoogleOAuth() {
     // 2) Esperamos el resultado del callback vía BroadcastChannel/localStorage (o fallback por cierre)
     let result;
     try {
-        result = await waitForOAuthResult(10_000); // 10s segundos para dar tiempo al usuario
+        result = await waitForOAuthResult(30_000); // 30s segundos para dar tiempo al usuario. Jp
         console.log("Google OAuth result:", result);
     } catch (e) {
-        console.error("Error esperando mensaje de OAuth Google:", e);
+        console.error("⚠️ OAuth sin mensaje, validando sesión... Google:", e);
         await pollUntilPopupClosed(popup);
         // intentamos igual consultar /auth/me
         result = { status: "success" };

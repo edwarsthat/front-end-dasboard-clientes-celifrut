@@ -94,10 +94,10 @@ export async function useMicrosoftOAuth() {
     // 2) Esperamos el resultado del callback vía BroadcastChannel/localStorage (o fallback por cierre). Jp
     let result;
     try {
-        result = await waitForOAuthResult(10_000); // 10s segundos para dar tiempo al usuario. Jp
+        result = await waitForOAuthResult(30_000); // 30s segundos para dar tiempo al usuario. Jp
         console.log("Microsoft OAuth result:", result);
     } catch (e) {
-        console.error("Error esperando mensaje de OAuth Microsoft:", e);
+        console.error("⚠️ OAuth sin mensaje, validando sesión...", e);
         await pollUntilPopupClosed(popup);
         // intentamos igual consultar /auth/me. Jp
         result = { status: "success" }; 
