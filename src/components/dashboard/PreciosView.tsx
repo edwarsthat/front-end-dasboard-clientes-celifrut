@@ -14,6 +14,9 @@ export function PreciosView({ data }: PreciosViewProps) {
     const [selectedWeek, setSelectedWeek] = useState<string>("");
     const [precioSeleccionado, setPrecioSeleccionado] = useState<precioProveedorType | null>(null);
 
+    // Estado para controlar la animación de actualización .Jp
+    const [isUpdating, setIsUpdating] = useState<boolean>(false);
+
     // Transformar datos para el componente Select
     const proveedorOptions = (data?.user?.proveedorData || []).map(proveedor => ({
         value: proveedor._id,
@@ -39,7 +42,7 @@ export function PreciosView({ data }: PreciosViewProps) {
 
         const [year, semana] = selectedWeek.split("-W");
 
-        // 🔍 AGREGAR ESTOS LOGS:
+        // 🔍 AGREGAR ESTOS LOGS: Jp
     console.log("=== DEBUG BÚSQUEDA ===");
     console.log("selectedWeek:", selectedWeek);
     console.log("year:", year, typeof year);
@@ -103,6 +106,16 @@ export function PreciosView({ data }: PreciosViewProps) {
         //5. ✅todo bien, establecer el precio seleccionado Jp
         console.log("✅ Precio encontrado:", precioTipoFrutaSemana);
         setPrecioSeleccionado(precioTipoFrutaSemana);
+
+        // Iniciar animación de actualización .Jp
+        setIsUpdating(true);
+        //limpio vista anterior para que se note el cambio Jp
+        setPrecioSeleccionado(null);
+        //desppues de 300ms, mostrar los nuevos precios Jp
+        setTimeout(() => {
+            setPrecioSeleccionado(precioTipoFrutaSemana);
+            setIsUpdating(false); //Desactivar animacion Jp
+        }, 300);
     }
 
     return (
@@ -141,7 +154,13 @@ export function PreciosView({ data }: PreciosViewProps) {
             </div>
 
             <div className="precios-content">
-                {precioSeleccionado ? (
+                    {/*Mostrar spinner cuando se esta actualizando. Jp*/}
+                    {isUpdating ? ( 
+                        <div className={"updating-message"}>
+                            <div className={"loading-spinner"}></div>
+                            <h3>Actualizando precios...</h3>
+                        </div>
+                    ) : precioSeleccionado ? (
                     <div className="precios-results">
                         <div className="precios-header">
                             <h3>Precios de la Semana {precioSeleccionado.week}/{precioSeleccionado.year}</h3>
