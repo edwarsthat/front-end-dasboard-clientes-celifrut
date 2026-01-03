@@ -2,7 +2,7 @@ import { config, buildApiUrl } from '../../config/env'
 import { openCenteredPopup } from './googleAuth'
 
 function waitForOAuthResult(timeoutMs = 30_000): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const channel = new BroadcastChannel('oauth_channel');
         let resolved = false;
 
@@ -24,7 +24,7 @@ function waitForOAuthResult(timeoutMs = 30_000): Promise<any> {
                     console.error("Error leyendo localStorage:", e);
                 }
                 
-                reject(new Error("Timeout esperando respuesta de OAuth"));
+                resolve({status: "timeout"});
             }
         }, timeoutMs);
 
@@ -34,12 +34,13 @@ function waitForOAuthResult(timeoutMs = 30_000): Promise<any> {
                 if (!resolved) {
                     resolved = true;
                     clearTimeout(timer);
+
+                    //Primero quitar el listener para evitar posibles fugas
+                    channel.onmessage = null;
                     channel.close();
                     
                     // Limpiar localStorage si existe
-                    try {
-                        localStorage.removeItem('oauth_result');
-                    } catch (e) {}
+                    try {localStorage.removeItem('oauth_result');} catch (e) {}
                     
                     console.log("✅ Resultado OAuth recibido vía BroadcastChannel:", event.data);
                     resolve(event.data);
@@ -94,13 +95,20 @@ export async function useMicrosoftOAuth() {
     // 2) Esperamos el resultado del callback vía BroadcastChannel/localStorage (o fallback por cierre). Jp
     let result;
     try {
-        result = await waitForOAuthResult(30_000); // 30s segundos para dar tiempo al usuario. Jp
+        result = await waitForOAuthResult(20_000); // 20s segundos para dar tiempo al usuario. Jp
         console.log("Microsoft OAuth result:", result);
     } catch (e) {
-        console.error("⚠️ OAuth sin mensaje, validando sesión...", e);
+        console.error("⚠️ OAuth sin mensaje, esperaddo cierre... Microsoft popup");
         await pollUntilPopupClosed(popup);
         // intentamos igual consultar /auth/me. Jp
         result = { status: "success" }; 
+    }
+// Jp
+    if (result.status === "timeout") {
+        console.warn("⏱ OAuth Microsoft: timeout, validando sesión...");
+        await pollUntilPopupClosed(popup);
+        //Intentar validar sesión igual. Jp
+        result = {status: "success"};
     }
 
     if (result.status !== "success") {
