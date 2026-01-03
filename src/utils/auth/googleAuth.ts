@@ -19,7 +19,7 @@ export function openCenteredPopup(url: string, name = "google-oauth", w = 520, h
 }
 
 function waitForOAuthResult(timeoutMs = 30_000): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const channel = new BroadcastChannel('oauth_channel');
         let resolved = false;
 
@@ -41,7 +41,8 @@ function waitForOAuthResult(timeoutMs = 30_000): Promise<any> {
                     console.error("Error leyendo localStorage:", e);
                 }
                 
-                reject(new Error("Timeout esperando respuesta de OAuth"));
+                // reject(new Error("Timeout esperando respuesta de OAuth"));
+                resolve({ status: "timeout" }); // Cambiado a resolve con status timeout. Jp
             }
         }, timeoutMs);
 
@@ -51,12 +52,13 @@ function waitForOAuthResult(timeoutMs = 30_000): Promise<any> {
                 if (!resolved) {
                     resolved = true;
                     clearTimeout(timer);
+
+                     //Primero quitar el listener para evitar posibles fugas
+                    channel.onmessage = null;
                     channel.close();
                     
                     // Limpiar localStorage si existe
-                    try {
-                        localStorage.removeItem('oauth_result');
-                    } catch (e) {}
+                    try {localStorage.removeItem('oauth_result');} catch (e) {}
                     
                     console.log("✅ Resultado OAuth recibido vía BroadcastChannel:", event.data);
                     resolve(event.data);
@@ -112,13 +114,17 @@ export async function useGoogleOAuth() {
     // 2) Esperamos el resultado del callback vía BroadcastChannel/localStorage (o fallback por cierre)
     let result;
     try {
-        result = await waitForOAuthResult(30_000); // 30s segundos para dar tiempo al usuario. Jp
+        result = await waitForOAuthResult(20_000); // 20s segundos para dar tiempo al usuario. Jp
         console.log("Google OAuth result:", result);
     } catch (e) {
-        console.error("⚠️ OAuth sin mensaje, validando sesión... Google:", e);
+        console.error("⚠️ OAuth sin mensaje, esperaddo cierre... Google popup");
         await pollUntilPopupClosed(popup);
         // intentamos igual consultar /auth/me
         result = { status: "success" };
+    }
+
+    if (result.status === "timeout") {
+        console.info("ℹ️ OAuth Google timeout, validando sesión"); // Jp
     }
 
     if (result.status !== "success") {
